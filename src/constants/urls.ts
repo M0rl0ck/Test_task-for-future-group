@@ -8,4 +8,6 @@ enum URL_DATA {
   big = BIG_VOLUME_DATA,
 }
 
+export type SizeData = keyof typeof URL_DATA;
+
 export { SMALL_VOLUME_DATA, BIG_VOLUME_DATA, URL_DATA };

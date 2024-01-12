@@ -1,5 +1,7 @@
+import { SizeData } from "../../constants/urls";
+
 interface IChooceSize {
-  callback: (size: "big" | "small") => void;
+  callback: (size: SizeData) => void;
 }
 
 const ChoiceSizeData = ({ callback }: IChooceSize) => {

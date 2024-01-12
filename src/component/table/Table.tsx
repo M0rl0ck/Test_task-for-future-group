@@ -1,17 +1,62 @@
+import { useState } from "react";
 import IData from "../../infostructure/IData";
+import { ColumnName, SortOrder } from "../../constants/arrows";
+import styles from "./table.module.css";
 
 interface ITableData {
   data: IData[];
+  sortData: (column: ColumnName, sortOrder: SortOrder) => void;
 }
-const Table = ({ data }: ITableData) => {
+
+const Table = ({ data, sortData }: ITableData) => {
+  const [columnName, setColumnName] = useState<ColumnName | null>(null);
+  const [order, setOrder] = useState<SortOrder>("ascending");
+
+  const sort = (column: ColumnName) => {
+    let newOrder: SortOrder = "ascending";
+    if (columnName === column) {
+      newOrder = order === "ascending" ? "descending" : "ascending";
+    } else {
+      newOrder = "ascending";
+    }
+    setColumnName(column);
+    setOrder(newOrder);
+    sortData(column, newOrder);
+  };
+
   return (
     <table>
       <tr>
-        <th>id</th>
-        <th>firstName</th>
-        <th>lastName</th>
-        <th>email</th>
-        <th>phone</th>
+        <th
+          className={columnName === "id" ? styles[order] : ""}
+          onClick={() => sort("id")}
+        >
+          id
+        </th>
+        <th
+          className={columnName === "firstName" ? styles[order] : ""}
+          onClick={() => sort("firstName")}
+        >
+          firstName
+        </th>
+        <th
+          className={columnName === "lastName" ? styles[order] : ""}
+          onClick={() => sort("lastName")}
+        >
+          lastName
+        </th>
+        <th
+          className={columnName === "email" ? styles[order] : ""}
+          onClick={() => sort("email")}
+        >
+          email
+        </th>
+        <th
+          className={columnName === "phone" ? styles[order] : ""}
+          onClick={() => sort("phone")}
+        >
+          phone
+        </th>
       </tr>
       {data.length &&
         data.map((el) => (
