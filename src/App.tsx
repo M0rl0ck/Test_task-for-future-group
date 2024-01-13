@@ -4,7 +4,7 @@ import ChoiceSizeData from "./component/ChoiceSizeData/ChoiceSizeData";
 import { SizeData, URL_DATA } from "./constants/urls";
 import IData from "./infostructure/IData";
 import Table from "./component/table/Table";
-import { ColumnName, SortOrder } from "./constants/arrows";
+import { ColumnName, SortOrder } from "./constants/TypesTable";
 
 function App() {
   const [dataSize, setDataSize] = useState<SizeData | null>(null);

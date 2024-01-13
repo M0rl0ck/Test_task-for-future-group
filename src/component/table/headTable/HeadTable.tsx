@@ -1,5 +1,5 @@
 import styles from "./headTable.module.css";
-import { ColumnName, SortOrder } from "../../../constants/arrows";
+import { ColumnName, SortOrder } from "../../../constants/TypesTable";
 
 interface ITableHead {
   columnName: ColumnName | null;
