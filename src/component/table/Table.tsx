@@ -41,16 +41,18 @@ const Table = ({ data, sortData }: ITableData) => {
     <>
       <table>
         <HeadTable columnName={columnName} order={order} sort={sort} />
-        {data.length &&
-          data.slice(pagination.start, pagination.end).map((el) => (
-            <tr>
-              <th>{el.id}</th>
-              <th>{el.firstName}</th>
-              <th>{el.lastName}</th>
-              <th>{el.email}</th>
-              <th>{el.phone}</th>
-            </tr>
-          ))}
+        <tbody>
+          {data.length &&
+            data.slice(pagination.start, pagination.end).map((el) => (
+              <tr key={el.phone}>
+                <th>{el.id}</th>
+                <th>{el.firstName}</th>
+                <th>{el.lastName}</th>
+                <th>{el.email}</th>
+                <th>{el.phone}</th>
+              </tr>
+            ))}
+        </tbody>
       </table>
       <Paginaton
         amount={data.length}
