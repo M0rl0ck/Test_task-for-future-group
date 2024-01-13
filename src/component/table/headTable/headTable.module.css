@@ -1,0 +1,16 @@
+.headCell {
+  padding: 10px 20px;
+}
+
+.ascending::after {
+  content: "⯅";
+}
+
+.descending::after {
+  content: "⯆";
+}
+
+.ascending::after,
+.descending::after {
+  position: absolute;
+}

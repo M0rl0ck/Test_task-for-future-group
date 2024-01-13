@@ -1,7 +1,8 @@
 import { useState } from "react";
 import IData from "../../infostructure/IData";
 import { ColumnName, SortOrder } from "../../constants/arrows";
-import styles from "./table.module.css";
+import HeadTable from "./headTable/HeadTable";
+// import styles from "./table.module.css";
 
 interface ITableData {
   data: IData[];
@@ -26,38 +27,7 @@ const Table = ({ data, sortData }: ITableData) => {
 
   return (
     <table>
-      <tr>
-        <th
-          className={columnName === "id" ? styles[order] : ""}
-          onClick={() => sort("id")}
-        >
-          id
-        </th>
-        <th
-          className={columnName === "firstName" ? styles[order] : ""}
-          onClick={() => sort("firstName")}
-        >
-          firstName
-        </th>
-        <th
-          className={columnName === "lastName" ? styles[order] : ""}
-          onClick={() => sort("lastName")}
-        >
-          lastName
-        </th>
-        <th
-          className={columnName === "email" ? styles[order] : ""}
-          onClick={() => sort("email")}
-        >
-          email
-        </th>
-        <th
-          className={columnName === "phone" ? styles[order] : ""}
-          onClick={() => sort("phone")}
-        >
-          phone
-        </th>
-      </tr>
+      <HeadTable columnName={columnName} order={order} sort={sort} />
       {data.length &&
         data.map((el) => (
           <tr>
