@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import IData from "../../infostructure/IData";
 import {
   ColumnName,
@@ -7,6 +7,7 @@ import {
 } from "../../constants/TypesTable";
 import HeadTable from "./headTable/HeadTable";
 import Paginaton from "./pagination/Paginaton";
+import Seach from "./Search/Seach";
 // import styles from "./table.module.css";
 
 interface ITableData {
@@ -17,13 +18,43 @@ interface ITableData {
 const MAXITEMS = 50;
 
 const Table = ({ data, sortData }: ITableData) => {
+  const [viewData, setViewData] = useState<IData[]>(data);
+  const [filter, setFilter] = useState<string>("");
   const [columnName, setColumnName] = useState<ColumnName | null>(null);
   const [order, setOrder] = useState<SortOrder>("ascending");
   const [pagination, setPagination] = useState<IPainationState>({
     start: 0,
-    end: Math.min(data.length, MAXITEMS),
+    end: Math.min(viewData.length, MAXITEMS),
     page: 1,
   });
+
+  useEffect(() => {
+    const filterData = (el: IData) => {
+      if (filter === "") {
+        return true;
+      }
+      if (
+        el.id.toString().includes(filter) ||
+        el.firstName.includes(filter) ||
+        el.lastName.includes(filter) ||
+        el.email.includes(filter) ||
+        el.phone.includes(filter)
+      ) {
+        return true;
+      }
+      return false;
+    };
+
+    setViewData(data.filter((el) => filterData(el)));
+  }, [data, filter]);
+
+  useEffect(() => {
+    setPagination({
+      start: 0,
+      end: Math.min(viewData.length, MAXITEMS),
+      page: 1,
+    });
+  }, [viewData]);
 
   const sort = (column: ColumnName) => {
     let newOrder: SortOrder = "ascending";
@@ -39,11 +70,12 @@ const Table = ({ data, sortData }: ITableData) => {
 
   return (
     <>
+      <Seach search={setFilter} />
       <table>
         <HeadTable columnName={columnName} order={order} sort={sort} />
         <tbody>
           {data.length &&
-            data.slice(pagination.start, pagination.end).map((el) => (
+            viewData.slice(pagination.start, pagination.end).map((el) => (
               <tr key={el.phone}>
                 <th>{el.id}</th>
                 <th>{el.firstName}</th>
@@ -55,7 +87,7 @@ const Table = ({ data, sortData }: ITableData) => {
         </tbody>
       </table>
       <Paginaton
-        amount={data.length}
+        amount={viewData.length}
         step={MAXITEMS}
         pagination={pagination}
         setPagination={setPagination}
