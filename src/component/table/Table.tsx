@@ -8,6 +8,7 @@ import {
 import HeadTable from "./headTable/HeadTable";
 import Paginaton from "./pagination/Paginaton";
 import Seach from "./Search/Seach";
+import Details from "./details/Details";
 // import styles from "./table.module.css";
 
 interface ITableData {
@@ -27,6 +28,7 @@ const Table = ({ data, sortData }: ITableData) => {
     end: Math.min(viewData.length, MAXITEMS),
     page: 1,
   });
+  const [detail, setDetail] = useState<IData | null>(null);
 
   useEffect(() => {
     const filterData = (el: IData) => {
@@ -76,7 +78,12 @@ const Table = ({ data, sortData }: ITableData) => {
         <tbody>
           {data.length &&
             viewData.slice(pagination.start, pagination.end).map((el) => (
-              <tr key={el.phone}>
+              <tr
+                key={el.phone}
+                onClick={() => {
+                  setDetail(el);
+                }}
+              >
                 <th>{el.id}</th>
                 <th>{el.firstName}</th>
                 <th>{el.lastName}</th>
@@ -92,6 +99,8 @@ const Table = ({ data, sortData }: ITableData) => {
         pagination={pagination}
         setPagination={setPagination}
       />
+
+      {!!detail && <Details item={detail} />}
     </>
   );
 };
