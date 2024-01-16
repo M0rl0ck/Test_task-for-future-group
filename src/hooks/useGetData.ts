@@ -7,17 +7,23 @@ const useGetData = (url: string) => {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
     const getData = async () => {
       setData([]);
       setIsLoading(true);
       setError(null);
       try {
-        const responce = await fetch(url);
+        const responce = await fetch(url, { signal });
         const data = await responce.json();
         setData(data);
       } catch (e) {
         if (e instanceof Error) {
-          setError(e);
+          if (signal.aborted) {
+            console.log("fetching is abborted");
+          } else {
+            setError(e);
+          }
         }
       } finally {
         setIsLoading(false);
@@ -26,6 +32,9 @@ const useGetData = (url: string) => {
     if (url) {
       getData();
     }
+    return () => {
+      controller.abort();
+    };
   }, [url]);
 
   return { data, isLoading, error };
