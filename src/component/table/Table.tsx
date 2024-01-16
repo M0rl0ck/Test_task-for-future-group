@@ -13,12 +13,11 @@ import Details from "./details/Details";
 
 interface ITableData {
   data: IData[];
-  sortData: (column: ColumnName, sortOrder: SortOrder) => void;
 }
 
 const MAXITEMS = 50;
 
-const Table = ({ data, sortData }: ITableData) => {
+const Table = ({ data }: ITableData) => {
   const [viewData, setViewData] = useState<IData[]>(data);
   const [filter, setFilter] = useState<string>("");
   const [columnName, setColumnName] = useState<ColumnName | null>(null);
@@ -31,6 +30,27 @@ const Table = ({ data, sortData }: ITableData) => {
   const [detail, setDetail] = useState<IData | null>(null);
 
   useEffect(() => {
+    const sortData = () => {
+      const sortedData = [...data];
+      if (!columnName) {
+        return sortedData;
+      }
+      if (columnName === "id") {
+        sortedData.sort((a, b) =>
+          order === "ascending" ? a.id - b.id : b.id - a.id
+        );
+      } else {
+        sortedData.sort((a, b) => {
+          if (order === "ascending") {
+            return a[columnName] < b[columnName] ? -1 : 1;
+          }
+          return a[columnName] > b[columnName] ? -1 : 1;
+        });
+      }
+
+      return sortedData;
+    };
+
     const filterData = (el: IData) => {
       if (filter === "") {
         return true;
@@ -47,8 +67,8 @@ const Table = ({ data, sortData }: ITableData) => {
       return false;
     };
 
-    setViewData(data.filter((el) => filterData(el)));
-  }, [data, filter]);
+    setViewData(sortData().filter((el) => filterData(el)));
+  }, [columnName, data, filter, order]);
 
   useEffect(() => {
     setPagination({
@@ -67,7 +87,6 @@ const Table = ({ data, sortData }: ITableData) => {
     }
     setColumnName(column);
     setOrder(newOrder);
-    sortData(column, newOrder);
   };
 
   return (
