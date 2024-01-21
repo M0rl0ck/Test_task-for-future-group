@@ -9,6 +9,7 @@ import HeadTable from "./headTable/HeadTable";
 import Paginaton from "./pagination/Paginaton";
 import Seach from "./Search/Seach";
 import Details from "./details/Details";
+import AddRecord from "./addRecord/AddRecord";
 // import styles from "./table.module.css";
 
 interface ITableData {
@@ -18,6 +19,7 @@ interface ITableData {
 const MAXITEMS = 50;
 
 const Table = ({ data }: ITableData) => {
+  const [addedData, setAddedData] = useState<IData[]>([]);
   const [viewData, setViewData] = useState<IData[]>(data);
   const [filter, setFilter] = useState<string>("");
   const [columnName, setColumnName] = useState<ColumnName | null>(null);
@@ -29,8 +31,12 @@ const Table = ({ data }: ITableData) => {
   });
   const [detail, setDetail] = useState<IData | null>(null);
 
+  const addData = (data: IData) => {
+    setAddedData((prev) => [...prev, data]);
+  };
+
   useEffect(() => {
-    const sortData = () => {
+    const sortData = (data: IData[]) => {
       const sortedData = [...data];
       if (!columnName) {
         return sortedData;
@@ -67,8 +73,10 @@ const Table = ({ data }: ITableData) => {
       return false;
     };
 
-    setViewData(sortData().filter((el) => filterData(el)));
-  }, [columnName, data, filter, order]);
+    setViewData(
+      sortData([...data, ...addedData]).filter((el) => filterData(el))
+    );
+  }, [addedData, columnName, data, filter, order]);
 
   useEffect(() => {
     setPagination({
@@ -92,6 +100,7 @@ const Table = ({ data }: ITableData) => {
   return (
     <>
       <Seach search={setFilter} />
+      <AddRecord addData={addData} />
       <table>
         <HeadTable columnName={columnName} order={order} sort={sort} />
         <tbody>
